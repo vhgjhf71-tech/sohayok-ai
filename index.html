@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>সহায়ক AI — Auto Reply</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#18263d;--line:#293951;--txt:#eef4ff;--muted:#a9b8ce;--green:#39d6a0;--blue:#79aaff}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#0b1220,#101b2d);color:var(--txt);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}
+.wrap{max-width:1000px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#39d6a0,#438cff);display:grid;place-items:center;font-size:23px;color:#071522;font-weight:900}
+h1{font-size:23px;margin:0}small,.muted{color:var(--muted)}.tag{border:1px solid #27664f;color:#83f0c7;background:#103528;padding:7px 12px;border-radius:99px;font-size:12px}
+.hero{background:linear-gradient(120deg,#172b42,#17243a);border:1px solid var(--line);border-radius:22px;padding:24px;margin-bottom:18px}
+.hero h2{margin:0 0 8px;font-size:25px}.hero p{margin:0;color:var(--muted);line-height:1.7}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:19px}
+.card h3{margin:0 0 14px;font-size:17px}.platform{display:flex;align-items:center;justify-content:space-between;padding:13px;background:var(--panel2);border-radius:13px;margin:10px 0}
+.platleft{display:flex;align-items:center;gap:11px}.bubble{width:37px;height:37px;border-radius:12px;display:grid;place-items:center;font-weight:800}.wa{background:#123e35;color:#55e6a9}.ms{background:#1a3155;color:#8bb7ff}
+.switch{position:relative;width:48px;height:27px;display:inline-block}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;border-radius:30px;background:#40516a;cursor:pointer;transition:.2s}.slider:before{content:"";position:absolute;width:19px;height:19px;left:4px;top:4px;background:white;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:#159b70}.switch input:checked+.slider:before{transform:translateX(21px)}
+label.field{display:block;color:var(--muted);font-size:13px;margin:12px 0 6px}textarea,input,select{width:100%;border:1px solid var(--line);border-radius:11px;background:#0d1728;color:var(--txt);padding:12px;font:inherit}textarea{min-height:95px;resize:vertical}
+button{border:0;border-radius:12px;background:linear-gradient(90deg,#24b982,#438cff);color:#071522;font-weight:800;padding:12px 17px;font:inherit;cursor:pointer}button.secondary{background:#24354e;color:var(--txt);border:1px solid var(--line)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.notice{border:1px solid #735c2a;background:#302817;color:#ffe1a0;border-radius:13px;padding:13px;line-height:1.6;font-size:13px;margin-top:16px}
+.chat{background:#0d1728;border:1px solid var(--line);border-radius:14px;padding:13px;margin:10px 0}.msg{padding:10px 12px;border-radius:12px;max-width:88%;line-height:1.55;margin:8px 0}.incoming{background:#25364f}.outgoing{background:#104b3b;margin-left:auto}.status{font-size:12px;color:var(--muted);margin-top:8px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 0}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:15px}.top{align-items:flex-start;flex-direction:column}.hero h2{font-size:21px}}
+</style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+</head>
+<body>
+<div class="wrap">
+ <header class="top">
+  <div class="brand"><div class="logo">AI</div><div><h1>সহায়ক AI</h1><small>Auto Reply Control Panel</small></div></div>
+  <span class="tag">ডেমো সংস্করণ · বিনামূল্যে</span>
+ </header>
+ <section class="hero">
+  <h2>আপনার মেসেজের উত্তর দিতে AI প্রস্তুত</h2>
+  <p>এখানে আপনি রিপ্লাইয়ের ভাষা ও ধরন সাজাতে পারবেন। এটি এখন একটি বিনামূল্যের ইন্টারফেস প্রোটোটাইপ—এখনো Messenger বা WhatsApp অ্যাকাউন্টের সঙ্গে যুক্ত নয়।</p>
+ </section>
+ <div class="grid">
+  <section class="card">
+   <h3>কানেকশন সেটিংস</h3>
+   <div class="platform"><div class="platleft"><div class="bubble ms">f</div><div><b>Messenger</b><div class="status">এখনো সংযুক্ত নয়</div></div></div><label class="switch"><input id="messenger" type="checkbox"><span class="slider"></span></label></div>
+   <div class="platform"><div class="platleft"><div class="bubble wa">W</div><div><b>WhatsApp</b><div class="status">এখনো সংযুক্ত নয়</div></div></div><label class="switch"><input id="whatsapp" type="checkbox"><span class="slider"></span></label></div>
+   <div class="notice">সুইচগুলো শুধু ডেমো। বাস্তব সংযোগের জন্য Meta-এর অনুমোদিত API, অ্যাপ রিভিউ/অনুমতি এবং একটি নিরাপদ webhook সার্ভার লাগবে। ব্যক্তিগত WhatsApp/Messenger ইনবক্সে সব ধরনের মেসেজ পড়া ও উত্তর দেওয়া সাধারণ ওয়েবসাইটের মাধ্যমে সম্ভব নয়।</div>
+  </section>
+  <section class="card">
+   <h3>AI-এর কথা বলার ধরন</h3>
+   <label class="field" for="tone">উত্তরের ধরন</label>
+   <select id="tone"><option>বন্ধুত্বপূর্ণ ও স্বাভাবিক</option><option>ভদ্র ও সংক্ষিপ্ত</option><option>আনুষ্ঠানিক</option><option>মজার ও হালকা</option></select>
+   <label class="field" for="lang">ভাষা</label>
+   <select id="lang"><option>বাংলা</option><option>বাংলা ও ইংরেজি</option><option>মেসেজের ভাষা অনুযায়ী</option></select>
+   <label class="field" for="instruction">AI-কে কীভাবে উত্তর দিতে বলবেন?</label>
+   <textarea id="instruction">বন্ধুর মতো স্বাভাবিকভাবে, সংক্ষিপ্ত ও ভদ্র উত্তর দেবে। নিশ্চিত না হলে বানিয়ে কিছু বলবে না।</textarea>
+   <div class="actions"><button class="secondary" id="save">সেটিংস সংরক্ষণ</button><span class="status" id="saved"></span></div>
+  </section>
+  <section class="card">
+   <h3>রিপ্লাই ডেমো</h3>
+   <label class="field" for="incoming">একটি নমুনা মেসেজ লিখুন</label>
+   <input id="incoming" value="কেমন আছো? অনেক দিন কথা হয় না।">
+   <div class="actions"><button id="reply">নমুনা উত্তর তৈরি</button></div>
+   <div class="chat"><div class="status">আগত মেসেজ</div><div class="msg incoming" id="shownIncoming">কেমন আছো? অনেক দিন কথা হয় না।</div><div class="status">ডেমো AI উত্তর</div><div class="msg outgoing" id="shownReply">উত্তর এখানে দেখা যাবে।</div></div>
+   <div class="status">এটি কেবল লোকাল ডেমো; এখানে কোনো আসল মেসেজ পাঠানো হয় না।</div>
+  </section>
+  <section class="card">
+   <h3>নিরাপত্তা ও নিয়ন্ত্রণ</h3>
+   <p class="muted" style="line-height:1.7">• অপরিচিত কাউকে OTP, পাসওয়ার্ড বা লগইন কোড পাঠাবেন না।<br>• AI-এর তৈরি উত্তর আগে পরীক্ষা করুন।<br>• সংবেদনশীল বা জরুরি মেসেজে নিজে উত্তর দিন।<br>• এই প্রোটোটাইপ কোনো মেসেজ সংগ্রহ বা সার্ভারে পাঠায় না।</p>
+   <button class="secondary" id="reset">ডেমো সেটিংস রিসেট</button>
+  </section>
+ </div>
+ <footer>সহায়ক AI · বিনামূল্যের প্রোটোটাইপ · বাস্তব সংযোগ সক্রিয় নয়</footer>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+$('reply').onclick=()=>{
+ const m=$('incoming').value.trim();
+ $('shownIncoming').textContent=m||'কোনো মেসেজ লেখা হয়নি।';
+ const tone=$('tone').value;
+ let r;
+ if(!m) r='আগে একটি মেসেজ লিখুন।';
+ else if(/কেমন আছো|কেমন আছেন|কী খবর/i.test(m)) r='ভালো আছি, ধন্যবাদ! 😊 তুমি কেমন আছো?';
+ else if(/হ্যালো|হাই|hello|hi/i.test(m)) r='হ্যালো! 😊 কী খবর, বলো?';
+ else if(/ধন্যবাদ|thanks/i.test(m)) r='আপনাকেও ধন্যবাদ! 😊';
+ else r=tone.includes('আনুষ্ঠানিক')?'আপনার মেসেজের জন্য ধন্যবাদ। আমি বিষয়টি দেখে আপনাকে জানাচ্ছি।':'মেসেজ করার জন্য ধন্যবাদ! 😊 তোমার কথাটা বুঝেছি। আরেকটু বিস্তারিত বলবে?';
+ $('shownReply').textContent=r;
+};
+$('save').onclick=()=>{$('saved').textContent='এই ডেমো পেজে সেটিংস আপাতত সংরক্ষিত দেখানো হলো।';};
+$('reset').onclick=()=>{ $('messenger').checked=false;$('whatsapp').checked=false;$('tone').selectedIndex=0;$('lang').selectedIndex=0;$('instruction').value='বন্ধুর মতো স্বাভাবিকভাবে, সংক্ষিপ্ত ও ভদ্র উত্তর দেবে। নিশ্চিত না হলে বানিয়ে কিছু বলবে না।';$('saved').textContent='রিসেট হয়েছে।';};
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  });
+}
+</script>
+</body></html>
