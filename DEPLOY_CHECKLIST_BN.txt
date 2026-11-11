@@ -1,0 +1,14 @@
+লাইভ করার আগে যাচাই
+[ ] Node hosting ও স্থায়ী storage প্রস্তুত
+[ ] HTTPS domain চালু
+[ ] .env পূরণ এবং JWT_SECRET পরিবর্তন
+[ ] Owner ও Wife login password পরিবর্তন
+[ ] OpenAI API key যোগ
+[ ] Meta App Secret ও Webhook Verify Token যোগ
+[ ] Messenger Page ID ও Page Access Token যোগ
+[ ] WhatsApp Phone Number ID ও Cloud API token যোগ
+[ ] Meta webhook subscription যাচাই
+[ ] Test customer থেকে inbound message পরীক্ষা
+[ ] AI reply এবং dashboard manual reply পরীক্ষা
+[ ] Backup ও error monitoring চালু
+[ ] WhatsApp Business App নম্বরের Coexistence eligibility Meta-তে নিশ্চিত

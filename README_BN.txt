@@ -1,21 +1,45 @@
-সহায়ক AI — দুই ব্যবসার Assistant Dashboard (PWA)
+সহায়ক AI Assistant — বাস্তব Backend সংস্করণ (v3)
 
-GitHub Pages-এ প্রকাশ:
-1. ZIP ফাইলটি Extract করুন।
-2. ভেতরের index.html, manifest.webmanifest, service-worker.js, icon.svg এবং README_BN.txt ফাইলগুলো আপনার GitHub repository-র root-এ Upload files দিয়ে আপলোড করুন।
-3. Commit changes চাপুন।
-4. Repository > Settings > Pages-এ যান।
-5. Deploy from a branch নির্বাচন করুন; Branch: main এবং Folder: /(root) দিয়ে Save করুন।
-6. প্রকাশিত GitHub Pages লিংক খুলুন। Chrome মেনু থেকে Install app/Add to Home screen ব্যবহার করতে পারবেন।
+এটি আগের শুধু-ফ্রন্টএন্ড ডেমো নয়। এতে Node.js backend, SQLite database,
+আলাদা লগইন, Messenger webhook/send API, WhatsApp Cloud API webhook/send API,
+OpenAI-ভিত্তিক AI উত্তর এবং গ্রাহক ইনবক্স যুক্ত করা হয়েছে।
 
-ব্যবহার:
-- একই ওয়েবসাইটে “আমার ব্যবসা” এবং “স্ত্রীর ব্যবসা” নামে দুটি আলাদা প্রোফাইল আছে।
-- প্রত্যেক প্রোফাইলে ব্যবসার নাম, Facebook Page link/ID, WhatsApp নম্বর এবং Facebook-to-WhatsApp সুইচ আলাদা করে রাখা যায়।
-- এই সংস্করণে সেটিংস একই ডিভাইসের ব্রাউজারে localStorage-এ সংরক্ষিত হয়। দুই মোবাইলের মধ্যে তথ্য ভাগাভাগি বা আলাদা ব্যবহারকারী লগইন এখনো নেই।
+কিন্তু ZIP ফাইল একা চালু করলেই Meta বা OpenAI সংযোগ সক্রিয় হবে না।
+নিচের সেটআপ আবশ্যক:
 
-অত্যন্ত গুরুত্বপূর্ণ:
-- এটি frontend/PWA prototype। Facebook বা WhatsApp-এ বাস্তব মেসেজ গ্রহণ/পাঠানো এখনো সক্রিয় নয়।
-- শুধু Facebook লিংক ও WhatsApp নম্বর বসালে API সংযোগ হয় না।
-- বাস্তব সংযোগের জন্য Meta Developer App, Messenger Platform permissions, WhatsApp Cloud API/Coexistence eligibility, secure backend, webhook, database এবং authentication দরকার।
-- GitHub Pages-এ Meta access token, app secret বা API key রাখবেন না।
-- WhatsApp Coexistence-এ নম্বরটি যোগ্য কি না এবং আপনার বর্তমান অ্যাপের সঙ্গে ব্যবহারের অনুমতি আছে কি না Meta onboarding-এ যাচাই করতে হবে।
+১) Node.js 20 বা নতুন সংস্করণসহ VPS/Render/Railway-এর মতো Node hosting নিন।
+   GitHub Pages-এ server.js চালানো যায় না।
+২) এই ZIP extract করে hosting-এ upload/deploy করুন।
+৩) npm install চালান।
+৪) .env.example কপি করে .env বানান। শক্তিশালী JWT_SECRET এবং নিজের login email/password দিন।
+   OPENAI_API_KEY, META_APP_SECRET, META_VERIFY_TOKEN পূরণ করুন।
+৫) Hosting-এ স্থায়ী disk/volume দিন; SQLite database data/ ফোল্ডারে থাকবে।
+৬) HTTPS domain চালু করুন। Meta webhook URL হবে:
+   https://আপনার-domain/webhook
+   Verify token হবে .env-এর META_VERIFY_TOKEN।
+৭) Meta Developer App-এ Messenger ও WhatsApp products, webhook subscriptions,
+   Page permissions/access token, WhatsApp Phone Number ID ও access token সেট করুন।
+৮) Dashboard-এ নিজের ব্যবসার Page ID/Page token এবং WhatsApp Phone Number ID/token দিন।
+৯) স্ত্রীর আলাদা login .env-এর WIFE_EMAIL/WIFE_PASSWORD দিয়ে seed হবে।
+   প্রত্যেক login-এর settings, inbox ও customer data আলাদা user_id-তে সংরক্ষিত।
+১০) আগে নিজের/টেস্ট Page ও test WhatsApp recipient দিয়ে পরীক্ষা করুন; পরে Meta review/permission অনুযায়ী live করুন।
+
+গুরুত্বপূর্ণ সীমাবদ্ধতা ও নিরাপত্তা:
+- WhatsApp-এ বর্তমানে ব্যবহৃত Business App নম্বরটি API-তে আনার আগে Meta Business Platform-এর
+  Coexistence eligibility এবং supported onboarding flow যাচাই করুন। নম্বর delete/uninstall করবেন না।
+- Facebook/WhatsApp-এ messaging windows, templates, permissions, app review এবং Meta policy প্রযোজ্য।
+- এই সংস্করণে Facebook/WhatsApp incoming message-এর AI auto-reply ও dashboard থেকে channel-specific
+  reply আছে। WhatsApp-এ লিখে Facebook-এর পুরোনো Messenger thread-এ reply করার cross-channel
+  bridge আলাদা customer identity mapping/command workflow; এটি এখানে চালু বলে দাবি করা হচ্ছে না।
+- Facebook–WhatsApp checkbox শুধু সেটিংস সংরক্ষণ করে; এটি Meta-র অনুমতি বা API connection-এর বিকল্প নয়।
+- production ব্যবহারের আগে rate limiting, backups, monitoring, HTTPS, secret rotation এবং
+  privacy/consent notice যোগ করুন।
+- API token dashboard থেকে server database-এ সংরক্ষিত হয়; public frontend-এ token পাঠানো হয় না।
+- এই ZIP-এ কোনো বাস্তব API key, token বা Meta credential অন্তর্ভুক্ত নেই।
+
+চালানোর কমান্ড:
+npm install
+npm start
+
+তারপর https://আপনার-domain/ খুলুন।
+Health check: https://আপনার-domain/health

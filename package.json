@@ -1,0 +1,19 @@
+{
+  "name": "sohayok-ai-real-assistant",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Sohayok AI Assistant - real backend integration for Messenger, WhatsApp Cloud API and OpenAI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "openai": "^4.86.1"
+  }
+}

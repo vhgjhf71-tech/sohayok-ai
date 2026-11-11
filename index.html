@@ -1,123 +1,35 @@
 <!doctype html>
-<html lang="bn">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101827">
-<title>সহায়ক AI — Business Assistant</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101a2b"><title>সহায়ক AI Assistant</title>
 <style>
-:root{--bg:#0b1220;--panel:#121d30;--panel2:#192840;--line:#2a3b55;--txt:#eef4ff;--muted:#a9b8ce;--green:#39d6a0;--blue:#82adff;--gold:#f6ce78}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#0b1220,#111d31);color:var(--txt);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}
-.wrap{max-width:1050px;margin:auto;padding:20px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,#39d6a0,#438cff);display:grid;place-items:center;color:#071522;font-weight:900;font-size:22px}
-h1{font-size:22px;margin:0}small,.muted,.status{color:var(--muted)}.tag{border:1px solid #27664f;color:#83f0c7;background:#103528;padding:7px 11px;border-radius:99px;font-size:12px}
-.hero,.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:15px}.hero{background:linear-gradient(120deg,#172b42,#17243a)}.hero h2{margin:0 0 8px;font-size:23px}.hero p{margin:0;color:var(--muted);line-height:1.7}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.card h3{margin:0 0 13px;font-size:17px}
-label.field{display:block;color:var(--muted);font-size:13px;margin:12px 0 6px}
-input,textarea,select{width:100%;border:1px solid var(--line);border-radius:11px;background:#0d1728;color:var(--txt);padding:12px;font:inherit}textarea{min-height:88px;resize:vertical}
-button{border:0;border-radius:11px;background:linear-gradient(90deg,#24b982,#438cff);color:#071522;font-weight:800;padding:11px 15px;font:inherit;cursor:pointer}button.secondary{background:#24354e;color:var(--txt);border:1px solid var(--line)}button:disabled{opacity:.5}
-.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.tabs{display:flex;gap:8px;margin:12px 0}.tabs button{flex:1}.tabs button.active{outline:2px solid var(--green);background:#174b40;color:#dffff2}
-.platform{display:flex;align-items:center;justify-content:space-between;background:var(--panel2);padding:12px;border-radius:12px;margin:10px 0}.switch{position:relative;width:48px;height:27px;display:inline-block;flex:0 0 48px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;border-radius:30px;background:#40516a;cursor:pointer}.slider:before{content:"";position:absolute;width:19px;height:19px;left:4px;top:4px;background:white;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:#159b70}.switch input:checked+.slider:before{transform:translateX(21px)}
-.notice{border:1px solid #735c2a;background:#302817;color:#ffe1a0;border-radius:12px;padding:12px;line-height:1.65;font-size:13px;margin-top:12px}
-.chat{background:#0d1728;border:1px solid var(--line);border-radius:13px;padding:12px;margin-top:12px}.msg{padding:10px 12px;border-radius:12px;max-width:90%;line-height:1.55;margin:8px 0}.incoming{background:#25364f}.outgoing{background:#104b3b;margin-left:auto}.status{font-size:12px;margin-top:7px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:18px 0}
-@media(max-width:720px){.grid{grid-template-columns:1fr}.wrap{padding:13px}.hero h2{font-size:20px}}
-</style>
-</head>
-<body>
-<div class="wrap">
-<header class="top">
- <div class="brand"><div class="logo">AI</div><div><h1>সহায়ক AI</h1><small>আপনার ব্যবসার ডিজিটাল সহকারী</small></div></div>
- <span class="tag">Assistant dashboard · Preview</span>
-</header>
-<section class="hero">
- <h2>কাস্টমারের সঙ্গে মানুষের মতো কথা বলুন</h2>
- <p>একই ওয়েবসাইটে দুটি আলাদা ব্যবসার প্রোফাইল রাখা যাবে। প্রত্যেকে নিজের Facebook Page, WhatsApp নম্বর ও সেটিংস আলাদাভাবে সংরক্ষণ করতে পারবেন।</p>
-</section>
-
-<section class="card">
- <h3>ব্যবসা নির্বাচন</h3>
- <div class="tabs">
-  <button id="tabA" class="active" type="button">আমার ব্যবসা</button>
-  <button id="tabB" class="secondary" type="button">স্ত্রীর ব্যবসা</button>
- </div>
- <div class="status" id="profileName">বর্তমানে: আমার ব্যবসা</div>
-</section>
-
-<div class="grid">
-<section class="card">
- <h3>ব্যবসার সংযোগ সেটিংস</h3>
- <label class="field" for="businessName">ব্যবসার নাম</label>
- <input id="businessName" placeholder="যেমন: Comilla Plumbing Solution">
- <label class="field" for="facebook">Facebook Page link অথবা Page ID</label>
- <input id="facebook" placeholder="https://facebook.com/আপনার-পেজ">
- <label class="field" for="whatsapp">WhatsApp Business নম্বর</label>
- <input id="whatsapp" type="tel" placeholder="দেশের কোডসহ নম্বর, যেমন 8801XXXXXXXXX">
- <div class="platform">
-  <div><b>Facebook মেসেজ WhatsApp-এ পরিচালনা</b><div class="status">সুবিধাটি চালু/বন্ধ করার নিয়ন্ত্রণ</div></div>
-  <label class="switch"><input id="bridge" type="checkbox"><span class="slider"></span></label>
- </div>
- <div class="actions"><button id="save">এই ব্যবসার সেটিংস সংরক্ষণ</button><button class="secondary" id="clear">ফাঁকা করুন</button></div>
- <div class="status" id="saveStatus" aria-live="polite"></div>
- <div class="notice"><b>সংযোগ সম্পর্কে:</b> এই ZIP-এ সেটিংসের ইন্টারফেস তৈরি আছে। Facebook/WhatsApp-এ সত্যিকারের মেসেজ আনা-পাঠানোর জন্য Meta API অনুমতি, Coexistence যোগ্যতা, নিরাপদ backend ও webhook আলাদাভাবে সেটআপ করতে হবে। শুধু লিংক/নম্বর দিলেই সংযোগ চালু হয় না।</div>
-</section>
-
-<section class="card">
- <h3>AI সহকারীর আচরণ</h3>
- <label class="field" for="tone">কথা বলার ধরন</label>
- <select id="tone"><option>বন্ধুত্বপূর্ণ ও স্বাভাবিক</option><option>ভদ্র ও সংক্ষিপ্ত</option><option>পেশাদার ও আনুষ্ঠানিক</option></select>
- <label class="field" for="language">ভাষা</label>
- <select id="language"><option>বাংলা</option><option>বাংলা ও ইংরেজি</option><option>কাস্টমারের ভাষা অনুযায়ী</option></select>
- <label class="field" for="instructions">ব্যবসা সম্পর্কে AI-কে নির্দেশনা</label>
- <textarea id="instructions" placeholder="আপনার সেবা, কাজের এলাকা, সময়, মূল্য সম্পর্কে তথ্য লিখুন।"></textarea>
- <div class="actions"><button class="secondary" id="saveAI">AI নির্দেশনা সংরক্ষণ</button></div>
- <div class="status" id="aiStatus"></div>
-</section>
-</div>
-
-<section class="card">
- <h3>কথোপকথনের নমুনা পরীক্ষা</h3>
- <label class="field" for="customerMessage">কাস্টমারের মেসেজ লিখুন</label>
- <input id="customerMessage" placeholder="যেমন: বাসার পানির লাইন লিক করছে, কীভাবে যোগাযোগ করব?">
- <div class="actions"><button id="makeReply">নমুনা উত্তর তৈরি</button></div>
- <div class="chat">
-  <div class="status">কাস্টমারের মেসেজ</div><div class="msg incoming" id="incomingView">এখানে কাস্টমারের মেসেজ দেখা যাবে।</div>
-  <div class="status">সহায়ক AI-এর নমুনা উত্তর</div><div class="msg outgoing" id="replyView">এখানে উত্তর দেখা যাবে।</div>
- </div>
- <div class="status">এটি এখন নমুনা পরীক্ষা। বাস্তব AI উত্তর ও মেসেজ পাঠাতে AI API এবং backend যুক্ত করতে হবে।</div>
-</section>
-<footer>সহায়ক AI · দুই ব্যবসার আলাদা প্রোফাইল · সেটিংস এই ডিভাইসের ব্রাউজারে সংরক্ষিত হয়</footer>
-</div>
+*{box-sizing:border-box}body{margin:0;background:#0e1727;color:#edf3ff;font-family:system-ui,'Noto Sans Bengali',sans-serif}main{max-width:900px;margin:auto;padding:20px}.card{background:#152238;border:1px solid #2c405c;border-radius:18px;padding:18px;margin:14px 0}h1{font-size:25px}h2{font-size:20px}label{display:block;margin:12px 0 5px;color:#b8c7dc}input,textarea,button{font:inherit;border-radius:10px;padding:12px;width:100%;border:1px solid #344963;background:#0e1727;color:white}textarea{min-height:100px}button{background:#168b70;border:0;font-weight:700;margin-top:12px;cursor:pointer}.secondary{background:#344963}.danger{background:#8e3a45}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.muted{color:#9eafc7;font-size:14px}.hidden{display:none}.item{padding:12px;border-bottom:1px solid #344963;cursor:pointer}.item small{color:#9eafc7}.msg{padding:9px 12px;border-radius:12px;margin:8px 0;background:#243750}.out{background:#145d52;margin-left:12%}.in{margin-right:12%}.warn{background:#392f1b;color:#f5d99a;padding:12px;border-radius:12px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}main{padding:12px}}
+</style></head><body><main>
+<h1>সহায়ক — বাস্তব AI Assistant</h1><p class="muted">Messenger, WhatsApp ও AI সহকারী পরিচালনার ড্যাশবোর্ড</p>
+<section id="login" class="card"><h2>লগইন</h2><label>ইমেইল</label><input id="email" type="email" placeholder="আপনার ইমেইল"><label>পাসওয়ার্ড</label><input id="password" type="password" placeholder="পাসওয়ার্ড"><button onclick="login()">লগইন করুন</button><p id="loginErr" class="muted"></p><p class="muted">লগইন তথ্য সার্ভার অ্যাডমিন .env ফাইলে তৈরি করবেন।</p></section>
+<section id="app" class="hidden">
+<div class="card"><div class="grid"><div><h2>ব্যবসার সেটিংস</h2><p class="muted" id="who"></p></div><button class="secondary" onclick="logout()">লগআউট</button></div>
+<label>ব্যবসার নাম</label><input id="business_name">
+<div class="grid"><div><label>Facebook Page ID</label><input id="fb_page_id"></div><div><label>Facebook Page Access Token</label><input id="fb_page_token" type="password" placeholder="নতুন টোকেন দিলে বদলাবে"></div></div>
+<div class="grid"><div><label>WhatsApp Phone Number ID</label><input id="wa_phone_number_id"></div><div><label>WhatsApp Cloud API Access Token</label><input id="wa_access_token" type="password" placeholder="নতুন টোকেন দিলে বদলাবে"></div></div>
+<label>WhatsApp প্রদর্শিত নম্বর</label><input id="wa_display_number" placeholder="দেশের কোডসহ নম্বর">
+<label><input id="fb_wa_enabled" type="checkbox" style="width:auto"> Facebook–WhatsApp সংযোগ সক্রিয় (সেটিংস/রাউটিং)</label>
+<label><input id="ai_enabled" type="checkbox" style="width:auto" checked> AI স্বয়ংক্রিয় উত্তর চালু</label>
+<label>AI-কে ব্যবসা সম্পর্কে নির্দেশনা দিন</label><textarea id="instructions" placeholder="আপনার সেবা, এলাকা, সময়, মূল্যনীতি ও গুরুত্বপূর্ণ তথ্য লিখুন"></textarea>
+<button onclick="saveSettings()">সেটিংস সংরক্ষণ</button><p id="saveStatus" class="muted"></p>
+<div class="warn">গুরুত্বপূর্ণ: API credentials না দিলে বাস্তব মেসেজ পাঠানো যাবে না। Facebook/WhatsApp webhook URL হবে এই সার্ভারের /webhook ঠিকানা। WhatsApp নম্বরের Coexistence যোগ্যতা Meta-তে আলাদাভাবে নিশ্চিত করতে হবে।</div></div>
+<div class="card"><h2>গ্রাহকের ইনবক্স</h2><button class="secondary" onclick="loadConversations()">ইনবক্স রিফ্রেশ</button><div class="grid"><div id="conversations"></div><div><h3 id="chatTitle">একটি কথোপকথন বেছে নিন</h3><div id="messages"></div><textarea id="reply" placeholder="উত্তর লিখুন"></textarea><button onclick="sendReply()">উত্তর পাঠান</button><p id="replyStatus" class="muted"></p></div></div></div>
+</section></main>
 <script>
+let token=localStorage.getItem('sohayok_token'), selected=null;
 const $=id=>document.getElementById(id);
-let active='a';
-const ids=['businessName','facebook','whatsapp','bridge','tone','language','instructions'];
-function key(id){return 'sohayok_v2_'+active+'_'+id}
-function load(){
- $('profileName').textContent='বর্তমানে: '+(active==='a'?'আমার ব্যবসা':'স্ত্রীর ব্যবসা');
- ids.forEach(id=>{let v=localStorage.getItem(key(id));if(v!==null){if(id==='bridge')$(id).checked=v==='true';else $(id).value=v;}else if(id==='bridge')$(id).checked=false;else $(id).value='';});
- $('tabA').className=active==='a'?'active':'';$('tabB').className=active==='b'?'active':'secondary';
-}
-function save(idsToSave){
- idsToSave.forEach(id=>localStorage.setItem(key(id),id==='bridge'?String($(id).checked):$(id).value));
-}
-$('tabA').onclick=()=>{active='a';load();};$('tabB').onclick=()=>{active='b';load();};
-$('save').onclick=()=>{save(['businessName','facebook','whatsapp','bridge']);$('saveStatus').textContent='এই ডিভাইসে ব্যবসার সেটিংস সংরক্ষিত হয়েছে। API সংযোগ এখনো চালু হয়নি।';};
-$('saveAI').onclick=()=>{save(['tone','language','instructions']);$('aiStatus').textContent='AI নির্দেশনা এই ডিভাইসে সংরক্ষিত হয়েছে।';};
-$('clear').onclick=()=>{ids.forEach(id=>{localStorage.removeItem(key(id));if(id==='bridge')$(id).checked=false;else $(id).value='';});$('saveStatus').textContent='এই প্রোফাইলের ফর্ম ফাঁকা করা হয়েছে।';};
-$('makeReply').onclick=()=>{
- const m=$('customerMessage').value.trim();$('incomingView').textContent=m||'কোনো মেসেজ লেখা হয়নি।';
- let r='মেসেজ করার জন্য ধন্যবাদ! আপনার বিষয়টি বুঝতে পেরেছি। অনুগ্রহ করে আপনার নাম ও লোকেশন জানাবেন, আমরা আপনাকে সাহায্য করছি।';
- if(!m)r='আগে একটি মেসেজ লিখুন।';
- else if(/দাম|খরচ|চার্জ|price/i.test(m))r='ধন্যবাদ। সঠিক খরচ জানাতে কাজের বিস্তারিত ও লোকেশনটি জানাবেন।';
- else if(/হ্যালো|হাই|hello|hi/i.test(m))r='আসসালামু আলাইকুম! 😊 আপনাকে কীভাবে সাহায্য করতে পারি?';
- else if(/ধন্যবাদ|thanks/i.test(m))r='আপনাকেও ধন্যবাদ! 😊 আরও কোনো সাহায্য লাগলে জানাবেন।';
- $('replyView').textContent=r;
-};
-load();
-if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));}
-</script>
-</body>
-</html>
+async function api(path,opts={}){const r=await fetch('/api'+path,{...opts,headers:{'content-type':'application/json','authorization':'Bearer '+token,...opts.headers}});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'সমস্যা হয়েছে');return d}
+async function login(){try{const d=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:$('email').value,password:$('password').value})}).then(r=>r.json());if(!d.token)throw Error(d.error||'লগইন ব্যর্থ');token=d.token;localStorage.setItem('sohayok_token',token);await boot()}catch(e){$('loginErr').textContent=e.message}}
+function logout(){localStorage.removeItem('sohayok_token');location.reload()}
+async function boot(){try{const me=await api('/me');$('who').textContent=me.email+' — আলাদা ব্যবসা প্রোফাইল';$('login').classList.add('hidden');$('app').classList.remove('hidden');const s=await api('/settings');for(const k of ['business_name','fb_page_id','wa_phone_number_id','wa_display_number','instructions'])$(k).value=s[k]||'';$('fb_wa_enabled').checked=!!s.fb_wa_enabled;$('ai_enabled').checked=!!s.ai_enabled;$('fb_page_token').placeholder=s.fb_page_token_set?'আগের টোকেন সংরক্ষিত — বদলাতে চাইলে নতুনটি দিন':'নতুন টোকেন দিন';$('wa_access_token').placeholder=s.wa_access_token_set?'আগের টোকেন সংরক্ষিত — বদলাতে চাইলে নতুনটি দিন':'নতুন টোকেন দিন';loadConversations()}catch(e){logout()}}
+async function saveSettings(){try{await api('/settings',{method:'PUT',body:JSON.stringify({business_name:$('business_name').value,fb_page_id:$('fb_page_id').value,fb_page_token:$('fb_page_token').value,wa_phone_number_id:$('wa_phone_number_id').value,wa_access_token:$('wa_access_token').value,wa_display_number:$('wa_display_number').value,fb_wa_enabled:$('fb_wa_enabled').checked,ai_enabled:$('ai_enabled').checked,instructions:$('instructions').value})});$('fb_page_token').value='';$('wa_access_token').value='';$('saveStatus').textContent='সেটিংস সংরক্ষিত হয়েছে।'}catch(e){$('saveStatus').textContent=e.message}}
+async function loadConversations(){try{const a=await api('/conversations');$('conversations').innerHTML=a.map(c=>`<div class="item" onclick="openChat(${c.id})"><b>${esc(c.customer_name||c.customer_id)}</b><br><small>${c.channel} · ${esc(c.last_message||'')}</small></div>`).join('')||'এখনো কোনো মেসেজ আসেনি';}catch(e){}}
+async function openChat(id){selected=id;const c=await api('/conversations');const item=c.find(x=>x.id===id);$('chatTitle').textContent=item?(item.channel+' — '+(item.customer_name||item.customer_id)):'কথোপকথন';const m=await api('/conversations/'+id+'/messages');$('messages').innerHTML=m.map(x=>`<div class="msg ${x.direction==='out'?'out':'in'}">${esc(x.body)}<br><small>${x.direction==='out'?'আপনি/AI':'গ্রাহক'}</small></div>`).join('')}
+async function sendReply(){if(!selected)return $('replyStatus').textContent='আগে কথোপকথন বেছে নিন';try{await api('/conversations/'+selected+'/reply',{method:'POST',body:JSON.stringify({text:$('reply').value})});$('reply').value='';$('replyStatus').textContent='উত্তর পাঠানো হয়েছে';await openChat(selected)}catch(e){$('replyStatus').textContent=e.message}}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+if(token)boot();
+</script></body></html>
