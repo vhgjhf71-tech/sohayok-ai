@@ -1,18 +1,9 @@
 {
-  "name": "সহায়ক AI — Auto Reply",
+  "name": "সহায়ক AI Business Assistant",
   "short_name": "সহায়ক AI",
-  "description": "AI Auto Reply website prototype",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#0b1220",
-  "theme_color": "#0b1220",
-  "icons": [
-    {
-      "src": "./icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ]
+  "theme_color": "#101827",
+  "description": "দুটি ব্যবসার জন্য আলাদা AI Assistant dashboard"
 }
