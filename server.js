@@ -4,14 +4,16 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Database = require("better-sqlite3");
 const OpenAI = require("openai");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
-const db = new Database(process.env.DB_FILE || "data/sohayok.sqlite");
+const dbFile = process.env.DB_FILE || "/tmp/sohayok.sqlite";
+const db = new Database(dbFile);
 const PORT = Number(process.env.PORT || 3000);
 const JWT_SECRET = process.env.JWT_SECRET || "development-only-change-this";
 const GRAPH = `https://graph.facebook.com/${process.env.META_GRAPH_VERSION || "v23.0"}`;
 
-require("fs").mkdirSync("data", { recursive: true });
 db.pragma("journal_mode = WAL");
 db.exec(`
 CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, email TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, role TEXT NOT NULL);
