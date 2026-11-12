@@ -41,7 +41,7 @@ function verifyMeta(req) {
   try { return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected)); } catch { return false; }
 }
 app.use(express.json({ limit: "1mb", verify: (req, res, buf) => { req.rawBody = Buffer.from(buf); } }));
-app.use(express.static("public"));
+app.use(express.static(__dirname));
 
 function auth(req, res, next) {
   const token = (req.get("authorization") || "").replace(/^Bearer\s+/i, "");
