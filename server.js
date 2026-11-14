@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, email TEXT UNIQUE NOT N
 CREATE TABLE IF NOT EXISTS settings(user_id INTEGER PRIMARY KEY, business_name TEXT DEFAULT '', fb_page_id TEXT DEFAULT '', fb_page_token TEXT DEFAULT '', wa_phone_number_id TEXT DEFAULT '', wa_access_token TEXT DEFAULT '', wa_display_number TEXT DEFAULT '', fb_wa_enabled INTEGER DEFAULT 0, ai_enabled INTEGER DEFAULT 1, instructions TEXT DEFAULT '', FOREIGN KEY(user_id) REFERENCES users(id));
 CREATE TABLE IF NOT EXISTS conversations(id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, channel TEXT NOT NULL, customer_id TEXT NOT NULL, customer_name TEXT DEFAULT '', last_message TEXT DEFAULT '', updated_at TEXT DEFAULT CURRENT_TIMESTAMP, UNIQUE(user_id,channel,customer_id));
 CREATE TABLE IF NOT EXISTS messages(id INTEGER PRIMARY KEY, conversation_id INTEGER NOT NULL, direction TEXT NOT NULL, body TEXT NOT NULL, external_id TEXT DEFAULT '', created_at TEXT DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(conversation_id) REFERENCES conversations(id));
+CREATE TABLE IF NOT EXISTS processed_events(channel TEXT NOT NULL, external_id TEXT NOT NULL, created_at TEXT DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(channel, external_id));
 `);
 function seed(email, password, role) {
   if (!email || !password) return;
@@ -43,6 +44,7 @@ function verifyMeta(req) {
 app.use(express.json({ limit: "1mb", verify: (req, res, buf) => { req.rawBody = Buffer.from(buf); } }));
 app.use(express.static(__dirname));
 
+const loginAttempts = new Map();
 function auth(req, res, next) {
   const token = (req.get("authorization") || "").replace(/^Bearer\s+/i, "");
   try { req.user = jwt.verify(token, JWT_SECRET); next(); }
@@ -94,6 +96,10 @@ async function makeAIReply(s, incoming, channel) {
   return result.choices?.[0]?.message?.content?.trim() || "আপনার বার্তাটি পেয়েছি। একটু পরে জানাচ্ছি।";
 }
 async function handleIncoming(userId, channel, customerId, text, name = "", externalId = "") {
+  if (externalId) {
+    const inserted = db.prepare("INSERT OR IGNORE INTO processed_events(channel,external_id) VALUES(?,?)").run(channel, externalId);
+    if (!inserted.changes) return;
+  }
   const cid = saveMessage(userId, channel, customerId, text, "in", name, externalId);
   const s = getSettings(userId);
   if (!s || !s.ai_enabled) return;
@@ -111,8 +117,16 @@ async function handleIncoming(userId, channel, customerId, text, name = "", exte
 app.post("/api/login", (req, res) => {
   const email = String(req.body.email || "").toLowerCase().trim();
   const password = String(req.body.password || "");
+  const now = Date.now(), attempts = loginAttempts.get(email) || { count: 0, until: 0 };
+  if (attempts.until > now) return res.status(429).json({ error: "অনেকবার চেষ্টা হয়েছে। ১৫ মিনিট পরে আবার চেষ্টা করুন।" });
   const user = db.prepare("SELECT * FROM users WHERE email=?").get(email);
-  if (!user || !bcrypt.compareSync(password, user.password_hash)) return res.status(401).json({ error: "ইমেইল বা পাসওয়ার্ড ভুল" });
+  if (!user || !bcrypt.compareSync(password, user.password_hash)) {
+    attempts.count += 1;
+    if (attempts.count >= 5) { attempts.until = now + 15 * 60 * 1000; attempts.count = 0; }
+    loginAttempts.set(email, attempts);
+    return res.status(401).json({ error: "ইমেইল বা পাসওয়ার্ড ভুল" });
+  }
+  loginAttempts.delete(email);
   const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "12h" });
   res.json({ token, email: user.email, role: user.role });
 });
@@ -187,5 +201,8 @@ app.post("/webhook", (req, res) => {
     }
   }
 });
-app.get("/health", (req, res) => res.json({ ok: true, service: "Sohayok AI Assistant" }));
+app.get("/health", (req, res) => res.json({
+  ok: true, service: "Sohayok AI Assistant",
+  configured: { openai: !!process.env.OPENAI_API_KEY, metaWebhook: !!(process.env.META_APP_SECRET && process.env.META_VERIFY_TOKEN) }
+}));
 app.listen(PORT, () => console.log(`Sohayok server listening on ${PORT}`));
