@@ -8,10 +8,15 @@ const path = require("path");
 const fs = require("fs");
 
 const app = express();
-const dbFile = process.env.DB_FILE || "/tmp/sohayok.sqlite";
+const dbFile = process.env.DB_FILE || path.join(__dirname, "data", "sohayok.sqlite");
+fs.mkdirSync(path.dirname(dbFile), { recursive: true });
 const db = new Database(dbFile);
 const PORT = Number(process.env.PORT || 3000);
-const JWT_SECRET = process.env.JWT_SECRET || "development-only-change-this";
+const JWT_SECRET = process.env.JWT_SECRET || "";
+if (process.env.NODE_ENV === "production" && JWT_SECRET.length < 32) {
+  throw new Error("Production requires a JWT_SECRET of at least 32 characters");
+}
+if (!JWT_SECRET) console.warn("WARNING: Set a strong JWT_SECRET before public deployment.");
 const GRAPH = `https://graph.facebook.com/${process.env.META_GRAPH_VERSION || "v23.0"}`;
 
 db.pragma("journal_mode = WAL");
@@ -42,9 +47,11 @@ function verifyMeta(req) {
   try { return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected)); } catch { return false; }
 }
 app.use(express.json({ limit: "1mb", verify: (req, res, buf) => { req.rawBody = Buffer.from(buf); } }));
-app.use(express.static(__dirname));
+// Serve only the public dashboard. Never expose server.js, package files, database or secrets.
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 
 const loginAttempts = new Map();
+const MAX_LOGIN_ATTEMPT_KEYS = 10000;
 function auth(req, res, next) {
   const token = (req.get("authorization") || "").replace(/^Bearer\s+/i, "");
   try { req.user = jwt.verify(token, JWT_SECRET); next(); }
@@ -117,16 +124,18 @@ async function handleIncoming(userId, channel, customerId, text, name = "", exte
 app.post("/api/login", (req, res) => {
   const email = String(req.body.email || "").toLowerCase().trim();
   const password = String(req.body.password || "");
-  const now = Date.now(), attempts = loginAttempts.get(email) || { count: 0, until: 0 };
+  const attemptKey = `${req.ip}:${email}`;
+  const now = Date.now(), attempts = loginAttempts.get(attemptKey) || { count: 0, until: 0 };
   if (attempts.until > now) return res.status(429).json({ error: "অনেকবার চেষ্টা হয়েছে। ১৫ মিনিট পরে আবার চেষ্টা করুন।" });
   const user = db.prepare("SELECT * FROM users WHERE email=?").get(email);
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     attempts.count += 1;
     if (attempts.count >= 5) { attempts.until = now + 15 * 60 * 1000; attempts.count = 0; }
-    loginAttempts.set(email, attempts);
+    if (loginAttempts.size >= MAX_LOGIN_ATTEMPT_KEYS) loginAttempts.clear();
+    loginAttempts.set(attemptKey, attempts);
     return res.status(401).json({ error: "ইমেইল বা পাসওয়ার্ড ভুল" });
   }
-  loginAttempts.delete(email);
+  loginAttempts.delete(attemptKey);
   const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: "12h" });
   res.json({ token, email: user.email, role: user.role });
 });
