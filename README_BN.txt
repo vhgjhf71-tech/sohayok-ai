@@ -13,7 +13,7 @@ OpenAI-ভিত্তিক AI উত্তর এবং গ্রাহক ই
 ৩) npm install চালান।
 ৪) .env.example কপি করে .env বানান। শক্তিশালী JWT_SECRET এবং নিজের login email/password দিন।
    OPENAI_API_KEY, META_APP_SECRET, META_VERIFY_TOKEN পূরণ করুন।
-৫) Hosting-এ স্থায়ী disk/volume দিন; SQLite database data/ ফোল্ডারে থাকবে।
+৫) Render-এ স্থায়ী disk/volume যুক্ত করুন এবং mount path `/var/data` দিন; Environment-এ `DB_FILE=/var/data/sohayok.sqlite` সেট করুন। স্থায়ী disk না থাকলে redeploy/restart-এ ডেটা হারাতে পারে।
 ৬) HTTPS domain চালু করুন। Meta webhook URL হবে:
    https://আপনার-domain/webhook
    Verify token হবে .env-এর META_VERIFY_TOKEN।
@@ -32,7 +32,7 @@ OpenAI-ভিত্তিক AI উত্তর এবং গ্রাহক ই
   reply আছে। WhatsApp-এ লিখে Facebook-এর পুরোনো Messenger thread-এ reply করার cross-channel
   bridge আলাদা customer identity mapping/command workflow; এটি এখানে চালু বলে দাবি করা হচ্ছে না।
 - Facebook–WhatsApp checkbox শুধু সেটিংস সংরক্ষণ করে; এটি Meta-র অনুমতি বা API connection-এর বিকল্প নয়।
-- production ব্যবহারের আগে rate limiting, backups, monitoring, HTTPS, secret rotation এবং
+- production ব্যবহারের আগে persistent disk, backups, monitoring, HTTPS, secret rotation এবং
   privacy/consent notice যোগ করুন।
 - API token dashboard থেকে server database-এ সংরক্ষিত হয়; public frontend-এ token পাঠানো হয় না।
 - এই ZIP-এ কোনো বাস্তব API key, token বা Meta credential অন্তর্ভুক্ত নেই।
