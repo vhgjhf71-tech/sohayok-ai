@@ -143,7 +143,7 @@ app.get("/api/me", auth, (req, res) => res.json({ email: req.user.email, role: r
 app.get("/api/settings", auth, (req, res) => {
   const s = getSettings(req.user.id);
   const { fb_page_token, wa_access_token, ...safe } = s;
-  res.json({ ...safe, fb_page_token_set: !!fb_page_token, wa_access_token_set: !!wa_access_token });
+  res.json({ ...safe, fb_page_token_set: !!fb_page_token, wa_access_token_set: !!wa_access_token, openai_configured: !!process.env.OPENAI_API_KEY });
 });
 app.put("/api/settings", auth, (req, res) => {
   const b = req.body || {};
